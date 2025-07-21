@@ -1472,10 +1472,9 @@ async fn get_real_project_path(claude_project_path: String) -> Result<Option<Str
                                 if let Some(obj) = json.as_object() {
                                     for (_, value) in obj {
                                         if let Some(str_val) = value.as_str() {
-                                            if str_val.starts_with(std::env::consts::OS == "macos" ? "/Users/" : "/home/") && str_val.contains("/repos/") {
-                                                if std::path::Path::new(str_val).exists() {
-                                                    return Ok(Some(str_val.to_string()));
-                                                }
+                                            // Check if it looks like an absolute path and exists
+                                            if str_val.starts_with("/") && std::path::Path::new(str_val).exists() {
+                                                return Ok(Some(str_val.to_string()));
                                             }
                                         }
                                     }
@@ -1661,7 +1660,8 @@ async fn debug_project_path(project_path: String) -> Result<String, String> {
                                             if let Some(obj) = json.as_object() {
                                                 for (key, value) in obj {
                                                     if let Some(str_val) = value.as_str() {
-                                                        if str_val.starts_with(std::env::consts::OS == "macos" ? "/Users/" : "/home/") || str_val.contains("/repos/") {
+                                                        // Log any absolute paths found in the JSON for debugging
+                                                        if str_val.starts_with("/") && std::path::Path::new(str_val).exists() {
                                                             debug_info.push_str(&format!("    Found path in {}: {}\n", key, str_val));
                                                         }
                                                     }
