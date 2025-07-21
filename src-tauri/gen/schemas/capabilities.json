@@ -1,0 +1,1 @@
+{"main":{"identifier":"main","description":"Main application capabilities","local":true,"windows":["main"],"permissions":["core:event:default","core:event:allow-listen","core:event:allow-emit","core:event:allow-unlisten","core:app:default","core:resources:default","core:menu:default","core:tray:default"]}}
