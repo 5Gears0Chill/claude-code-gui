@@ -1472,7 +1472,7 @@ async fn get_real_project_path(claude_project_path: String) -> Result<Option<Str
                                 if let Some(obj) = json.as_object() {
                                     for (_, value) in obj {
                                         if let Some(str_val) = value.as_str() {
-                                            if str_val.starts_with("/Users/") && str_val.contains("/repos/") {
+                                            if str_val.starts_with(std::env::consts::OS == "macos" ? "/Users/" : "/home/") && str_val.contains("/repos/") {
                                                 if std::path::Path::new(str_val).exists() {
                                                     return Ok(Some(str_val.to_string()));
                                                 }
@@ -1490,7 +1490,7 @@ async fn get_real_project_path(claude_project_path: String) -> Result<Option<Str
     
     // Fallback: decode the directory name to get the real path
     // Claude projects encode paths by replacing '/' with '-' and adding a leading '-'
-    // Example: /Users/muaazjoosuf/repos/buy-together -> -Users-muaazjoosuf-repos-buy-together
+    // Example: /Users/username/repos/project-name -> -Users-username-repos-project-name
     if let Some(dir_name) = std::path::Path::new(&claude_project_path).file_name() {
         if let Some(encoded_path) = dir_name.to_str() {
             if encoded_path.starts_with('-') {
@@ -1661,7 +1661,7 @@ async fn debug_project_path(project_path: String) -> Result<String, String> {
                                             if let Some(obj) = json.as_object() {
                                                 for (key, value) in obj {
                                                     if let Some(str_val) = value.as_str() {
-                                                        if str_val.starts_with("/Users/") || str_val.contains("/repos/") {
+                                                        if str_val.starts_with(std::env::consts::OS == "macos" ? "/Users/" : "/home/") || str_val.contains("/repos/") {
                                                             debug_info.push_str(&format!("    Found path in {}: {}\n", key, str_val));
                                                         }
                                                     }
@@ -2861,7 +2861,7 @@ async fn load_project_todos(project_path: String) -> Result<Vec<Todo>, String> {
         format!("{}/.claude-todos.json", project_path),
         // If the project_path contains the transformed path, try to extract the real path
         if project_path.contains("/.claude/projects/") {
-            // Extract real path from transformed path like: /Users/user/.claude/projects/-Users-user-repos-project
+            // Extract real path from transformed path like: /home/user/.claude/projects/-home-user-repos-project
             let parts: Vec<&str> = project_path.split("/.claude/projects/").collect();
             if parts.len() == 2 {
                 let encoded_path = parts[1];

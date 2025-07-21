@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "Claude Code GUI - Beautiful interface for Claude Code CLI"
 authors = ["Claude Code GUI Team"]
 license = "MIT"
-repository = "https://github.com/claude-code/gui"
+repository = "https://github.com/your-username/claude-code-gui"
 edition = "2021"
 
 [build-dependencies]
